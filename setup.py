@@ -6,13 +6,13 @@ from os.path import dirname, join
 
 here = dirname(__file__)
 setup(
-    name='btchip-python',
+    name='navhip-python',
     version='0.1.28',
-    author='BTChip',
-    author_email='hello@ledger.fr',
+    author='NAVhip',
+    author_email='alex@nav.community',
     description='Python library to communicate with Ledger Nano dongle',
     long_description=open(join(here, 'README.md')).read(),
-    url='https://github.com/LedgerHQ/btchip-python',
+    url='https://github.com/aguycalled/navhip-python',
     packages=find_packages(),
     install_requires=['hidapi>=0.7.99'],
     extras_require = {

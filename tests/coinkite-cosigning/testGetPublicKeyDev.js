@@ -21,8 +21,8 @@
 # To be run with the dongle in developer mode, PIN verified
 
 import hashlib
-from btchip.btchip import *
-from btchip.btchipUtils import *
+from navhip.navhip import *
+from navhip.navhipUtils import *
 from base64 import b64encode
 
 # Replace with your own seed (preferably import it and store it), key path, and Testnet flag
@@ -106,7 +106,7 @@ def signMessage(encodedPrivateKey, data):
     return b64encode(chr(27 + 4 + (signature[0] & 0x01)) + r + s)
          
 dongle = getDongle(True)
-app = btchip(dongle)
+app = navhip(dongle)
 seed = app.importPrivateKey(SEED, TESTNET)
 privateKey = app.deriveBip32Key(seed, KEYPATH)
 publicKeyData = app.getPublicKey(privateKey)

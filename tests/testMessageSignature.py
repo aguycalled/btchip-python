@@ -17,8 +17,8 @@
 ********************************************************************************
 """
 
-from btchip.btchip import *
-from btchip.btchipUtils import *
+from navhip.navhip import *
+from navhip.navhipUtils import *
 
 # Run on non configured dongle or dongle configured with test seed below
 
@@ -31,9 +31,9 @@ SIGNATURE = bytearray("30450221009a0d28391c0535aec1077bbb86614c8f3c384a3e9aa1a12
 
 # Optional setup
 dongle = getDongle(True)
-app = btchip(dongle)
+app = navhip(dongle)
 try:
-	app.setup(btchip.OPERATION_MODE_WALLET, btchip.FEATURE_RFC6979, 0x00, 0x05, "1234", None, btchip.QWERTY_KEYMAP, SEED)
+	app.setup(navhip.OPERATION_MODE_WALLET, navhip.FEATURE_RFC6979, 0x00, 0x05, "1234", None, navhip.QWERTY_KEYMAP, SEED)
 except:
 	pass
 # Authenticate
@@ -49,7 +49,7 @@ if not response.startswith(SECONDFACTOR_1):
 	raise BTChipException("Invalid second factor")
 # Get a reference to the dongle again, as it was disconnected
 dongle = getDongle(True)
-app = btchip(dongle)
+app = navhip(dongle)
 # Compute the signature
 signature = app.signMessageSign(response[len(response) - 4:])
 if signature <> SIGNATURE:

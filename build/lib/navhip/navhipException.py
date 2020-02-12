@@ -1,8 +1,8 @@
 """
-*******************************************************************************    
+*******************************************************************************
 *   BTChip Bitcoin Hardware Wallet Python API
 *   (c) 2014 BTChip - 1BTChip7VfTnrPra5jqci7ejnMguuHogTn
-*   
+*
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
 *  You may obtain a copy of the License at
@@ -17,18 +17,12 @@
 ********************************************************************************
 """
 
-from navhip.navhip import *
-#from navhip.navhipUtils import *
+class BTChipException(Exception):
 
-# Run on any dongle to test connectivity.
+	def __init__(self, message, sw=0x6f00):
+		self.message = message
+		self.sw = sw
 
-dongle = getDongle(True)
-app = navhip(dongle)
-
-print('btchip firmware version:')
-print(app.getFirmwareVersion())
-
-print('some random number from the dongle:')
-print(map(hex, app.getRandom(20)))
-
-dongle.close()
+	def __str__(self):
+		buf = "Exception : " + self.message
+		return buf

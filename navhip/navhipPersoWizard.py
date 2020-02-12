@@ -28,11 +28,11 @@ try:
 except:
 	MNEMONIC = False
 
-from .btchipComm import getDongle, DongleWait
-from .btchip import btchip
-from .btchipUtils import compress_public_key,format_transaction, get_regular_input_script
+from .navhipComm import getDongle, DongleWait
+from .navhip import navhip
+from .navhipUtils import compress_public_key,format_transaction, get_regular_input_script
 from .bitcoinTransaction import bitcoinTransaction
-from .btchipException import BTChipException
+from .navhipException import BTChipException
 
 import ui.personalization00start
 import ui.personalization01seed
@@ -54,7 +54,7 @@ def waitDongle(currentDialog, persoData):
 			except:
 				pass
 		dongle = getDongle(BTCHIP_DEBUG)
-		persoData['client'] = btchip(dongle)
+		persoData['client'] = navhip(dongle)
 		persoData['client'].getFirmwareVersion()['version'].split(".")
 		return True
 	except BTChipException as e:
@@ -191,22 +191,22 @@ class ConfigDialog(QtGui.QDialog):
 
 	def processNext(self):
 		if (self.ui.qwertyButton.isChecked()):
-			self.persoData['keyboard'] = btchip.QWERTY_KEYMAP
+			self.persoData['keyboard'] = navhip.QWERTY_KEYMAP
 		elif (self.ui.qwertzButton.isChecked()):
-			self.persoData['keyboard'] = btchip.QWERTZ_KEYMAP
+			self.persoData['keyboard'] = navhip.QWERTZ_KEYMAP
 		elif (self.ui.azertyButton.isChecked()):
-			self.persoData['keyboard'] = btchip.AZERTY_KEYMAP
+			self.persoData['keyboard'] = navhip.AZERTY_KEYMAP
 		try:
 			while not waitDongle(self, self.persoData):
 				pass
 		except Exception as e:
 			self.reject()
 			self.persoData['main'].reject()
-		mode = btchip.OPERATION_MODE_WALLET
+		mode = navhip.OPERATION_MODE_WALLET
 		if not self.persoData['hardened']:
-			mode = mode | btchip.OPERATION_MODE_SERVER
+			mode = mode | navhip.OPERATION_MODE_SERVER
 		try:
-			self.persoData['client'].setup(mode, btchip.FEATURE_RFC6979, self.persoData['currencyCode'],
+			self.persoData['client'].setup(mode, navhip.FEATURE_RFC6979, self.persoData['currencyCode'],
 				self.persoData['currencyCodeP2SH'], self.persoData['pin'], None,
 				self.persoData['keyboard'], self.persoData['seed'])
 		except BTChipException as e:
@@ -278,7 +278,7 @@ class FinalizeDialog(QtGui.QDialog):
 			return
 		if not self.persoData['hardened']:
 			try:
-				self.persoData['client'].setOperationMode(btchip.OPERATION_MODE_SERVER)
+				self.persoData['client'].setOperationMode(navhip.OPERATION_MODE_SERVER)
 			except:
 				QMessageBox.warning(self, "Error", "Error switching to non hardened mode", "OK")
 				self.reject()

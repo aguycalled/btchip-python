@@ -86,14 +86,18 @@ class bitcoinTransaction:
 
 	def __init__(self, data=None):
 		self.version = ""
+		self.time = ""
 		self.inputs = []
 		self.outputs = []
 		self.lockTime = ""
 		self.witness = False
 		self.witnessScript = ""
+		self.strdzeel = []
 		if data is not None:
 			offset = 0
 			self.version = data[offset:offset + 4]
+			offset += 4
+			self.time = data[offset:offset + 4]
 			offset += 4
 			if (data[offset] == 0) and (data[offset + 1] != 0):
 				offset += 2
@@ -111,12 +115,19 @@ class bitcoinTransaction:
 			for i in range(numOutputs):
 				tmp = { 'buffer': data, 'offset' : offset}
 				self.outputs.append(bitcoinOutput(tmp))
+				print("added output")
 				offset = tmp['offset']
 			if self.witness:
 				self.witnessScript = data[offset : len(data) - 4]
 				self.lockTime = data[len(data) - 4:]
 			else:
 				self.lockTime = data[offset:offset + 4]
+			if int.from_bytes(self.version, byteorder='little') >= 2:
+				offset += 4
+				strDZeelSize = readVarint(data, offset)
+				offset += strDZeelSize['size']
+				self.strdzeel = data[offset:offset + strDZeelSize['value']]
+
 
 	def serialize(self, skipOutputLocktime=False, skipWitness=False):
 		if skipWitness or (not self.witness):
@@ -125,6 +136,7 @@ class bitcoinTransaction:
 			useWitness = True
 		result = []
 		result.extend(self.version)
+		result.extend(self.time)
 		if useWitness:
 			result.append(0x00)
 			result.append(0x01)
@@ -138,6 +150,9 @@ class bitcoinTransaction:
 			if useWitness:
 				result.extend(self.witnessScript)
 			result.extend(self.lockTime)
+			if int.from_bytes(self.version, byteorder='little') >= 2:
+				writeVarint(len(self.strdzeel), result)
+				result.extend(self.strdzeel)
 		return result
 
 	def serializeOutputs(self):
@@ -148,7 +163,8 @@ class bitcoinTransaction:
 		return result
 
 	def __str__(self):
-		buf =  "Version : " + hexlify(self.version) + "\r\n"
+		buf =  "Version : " + hexlify(self.version).hex() + "\r\n"
+		buf +=  "Time : " + hexlify(self.time).hex() + "\r\n"
 		index = 1
 		for trinput in self.inputs:
 			buf += "Input #" + str(index) + "\r\n"
@@ -159,7 +175,10 @@ class bitcoinTransaction:
 			buf += "Output #" + str(index) + "\r\n"
 			buf += str(troutput)
 			index+=1
-		buf += "Locktime : " + hexlify(self.lockTime) + "\r\n"
+		buf += "Locktime : " + hexlify(self.lockTime).hex() + "\r\n"
 		if self.witness:
 			buf += "Witness script : " + hexlify(self.witnessScript) + "\r\n"
+		if int.from_bytes(self.version, byteorder='little') >= 2:
+			buf +=  "strDZeel : " + hexlify(self.strdzeel).hex() + "\r\n"
+
 		return buf

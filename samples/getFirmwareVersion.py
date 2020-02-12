@@ -17,10 +17,10 @@
 ********************************************************************************
 """
 
-from btchip.btchip import *
+from navhip.navhip import *
 import sys
 
 dongle = getDongle(True)
-app = btchip(dongle)
+app = navhip(dongle)
 print(app.getFirmwareVersion()['version'])
 

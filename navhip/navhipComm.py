@@ -18,7 +18,7 @@
 """
 
 from abc import ABCMeta, abstractmethod
-from .btchipException import *
+from .navhipException import *
 from .ledgerWrapper import wrapCommandAPDU, unwrapResponseAPDU
 from binascii import hexlify
 import time

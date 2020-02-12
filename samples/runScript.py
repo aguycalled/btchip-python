@@ -17,7 +17,7 @@
 ********************************************************************************
 """
 
-from btchip.btchip import *
+from navhip.navhip import *
 import sys
 import binascii
 

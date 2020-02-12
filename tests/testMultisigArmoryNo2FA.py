@@ -17,8 +17,8 @@
 ********************************************************************************
 """
 
-from btchip.btchip import *
-from btchip.btchipUtils import *
+from navhip.navhip import *
+from navhip.navhipUtils import *
 import json
 
 """
@@ -133,9 +133,9 @@ if output<>OUTPUT:
 
 # Optional setup
 dongle = getDongle(True)
-app = btchip(dongle)
+app = navhip(dongle)
 try:
-  app.setup(btchip.OPERATION_MODE_RELAXED_WALLET, btchip.FEATURE_RFC6979|btchip.FEATURE_NO_2FA_P2SH, 111, 196, "1234", None, btchip.QWERTY_KEYMAP, SEED)
+  app.setup(navhip.OPERATION_MODE_RELAXED_WALLET, navhip.FEATURE_RFC6979|navhip.FEATURE_NO_2FA_P2SH, 111, 196, "1234", None, navhip.QWERTY_KEYMAP, SEED)
 except:
   pass
 # Authenticate

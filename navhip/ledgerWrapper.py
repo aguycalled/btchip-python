@@ -18,7 +18,7 @@
 """
 
 import struct
-from .btchipException import BTChipException
+from .navhipException import BTChipException
 
 def wrapCommandAPDU(channel, command, packetSize):
 	if packetSize < 3:

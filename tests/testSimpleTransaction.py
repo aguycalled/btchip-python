@@ -17,8 +17,8 @@
 ********************************************************************************
 """
 
-from btchip.btchip import *
-from btchip.btchipUtils import *
+from navhip.navhip import *
+from navhip.navhipUtils import *
 
 # Run on non configured dongle or dongle configured with test seed below
 
@@ -36,9 +36,9 @@ TRANSACTION = bytearray("0100000001c773da236484dae8f0fdba3d7e0ba1d05070d1a34fc44
 
 # Optional setup
 dongle = getDongle(True)
-app = btchip(dongle)
+app = navhip(dongle)
 try:
-	app.setup(btchip.OPERATION_MODE_WALLET, btchip.FEATURE_RFC6979, 0x00, 0x05, "1234", None, btchip.QWERTY_KEYMAP, SEED)
+	app.setup(navhip.OPERATION_MODE_WALLET, navhip.FEATURE_RFC6979, 0x00, 0x05, "1234", None, navhip.QWERTY_KEYMAP, SEED)
 except:
 	pass
 # Authenticate
@@ -61,7 +61,7 @@ if not response.startswith(SECONDFACTOR_1):
 	raise BTChipException("Invalid second factor")
 # Get a reference to the dongle again, as it was disconnected
 dongle = getDongle(True)
-app = btchip(dongle)
+app = navhip(dongle)
 # Replay the transaction, this time continue it since the second factor is ready
 app.startUntrustedTransaction(False, 0, [trustedInput], outputScript)
 app.finalizeInput(ADDRESS, "0.0009", "0.0001", "0'/1/0")
