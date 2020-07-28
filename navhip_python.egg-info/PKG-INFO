@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: navhip-python
-Version: 0.1.28
+Version: 0.1.29
 Summary: Python library to communicate with Ledger Nano dongle
 Home-page: https://github.com/aguycalled/navhip-python
 Author: NAVhip

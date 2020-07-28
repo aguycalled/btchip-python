@@ -7,7 +7,7 @@ from os.path import dirname, join
 here = dirname(__file__)
 setup(
     name='navhip-python',
-    version='0.1.28',
+    version='0.1.29',
     author='NAVhip',
     author_email='alex@nav.community',
     description='Python library to communicate with Ledger Nano dongle',
