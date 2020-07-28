@@ -415,7 +415,7 @@ class navhip:
 
 		strdzeelSerialized = []
 		writeVarint(len(strdzeel), strdzeelSerialized)
-		strdzeelSerialized.extend(strdzeel)
+		strdzeelSerialized.extend(strdzeel.encode())
 
 		offset = 0
 
