@@ -39,7 +39,7 @@ dongle = getDongle(True)
 app = navhip(dongle)
 try:
 	app.setup(navhip.OPERATION_MODE_WALLET, navhip.FEATURE_RFC6979, 0x00, 0x05, "1234", None, navhip.QWERTY_KEYMAP, SEED)
-except:
+except Exception:
 	pass
 # Authenticate
 app.verifyPin("1234")

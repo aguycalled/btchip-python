@@ -5,18 +5,19 @@ from setuptools import setup, find_packages
 from os.path import dirname, join
 
 here = dirname(__file__)
+import navhip
 setup(
     name='navhip-python',
-    version='0.1.29',
+    version=navhip.__version__,
     author='NAVhip',
     author_email='alex@nav.community',
     description='Python library to communicate with Ledger Nano dongle',
     long_description=open(join(here, 'README.md')).read(),
     url='https://github.com/aguycalled/navhip-python',
     packages=find_packages(),
-    install_requires=['hidapi>=0.7.99'],
+    install_requires=['hidapi>=0.7.99', 'ecdsa>=0.9'],
     extras_require = {
-	'smartcard': [ 'python-pyscard>=1.6.12-4build1', 'ecdsa>=0.9' ]
+	'smartcard': [ 'python-pyscard>=1.6.12-4build1' ]
     },
     include_package_data=True,
     zip_safe=False,
