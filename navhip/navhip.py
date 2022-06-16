@@ -85,12 +85,12 @@ class navhip:
 				self.scriptBlockLength = 50
 			else:
 				self.scriptBlockLength = 255
-		except:
-			pass
-		try:
+		except Exception:
+			pass				
+		try:			
 			result = self.getJCExtendedFeatures()
 			self.needKeyCache = (result['proprietaryApi'] == False)
-		except:
+		except Exception:
 			pass
 
 	def setAlternateCoinVersion(self, versionRegular, versionP2SH):
@@ -226,7 +226,7 @@ class navhip:
 		result['value'] = response
 		return result
 
-	def startUntrustedTransaction(self, newTransaction, inputIndex, outputList, redeemScript, version=0x01, time=0x00, cashAddr=False):
+	def startUntrustedTransaction(self, newTransaction, inputIndex, outputList, redeemScript, version=0x01, time=0x00, cashAddr=False, continueSegwit=False):
 		# Start building a fake transaction with the passed inputs
 		segwit = False
 		if newTransaction:
@@ -240,7 +240,7 @@ class navhip:
 			else:
 				p2 = 0x00
 		else:
-				p2 = 0x80
+				p2 = 0x10 if continueSegwit else 0x80
 		apdu = [ self.BTCHIP_CLA, self.BTCHIP_INS_HASH_INPUT_START, 0x00, p2 ]
 		params = bytearray(version.to_bytes(4, byteorder='little')) + bytearray(time.to_bytes(4, byteorder='little'))
 		writeVarint(len(outputList), params)
@@ -257,10 +257,10 @@ class navhip:
 			apdu = [ self.BTCHIP_CLA, self.BTCHIP_INS_HASH_INPUT_START, 0x80, 0x00 ]
 			params = []
 			script = bytearray(redeemScript)
-			if ('witness' in passedOutput) and passedOutput['witness']:
-				params.append(0x02)
-			elif ('trustedInput' in passedOutput) and passedOutput['trustedInput']:
+			if ('trustedInput' in passedOutput) and passedOutput['trustedInput']:
 				params.append(0x01)
+			elif ('witness' in passedOutput) and passedOutput['witness']:
+				params.append(0x02)
 			else:
 				params.append(0x00)
 			if ('trustedInput' in passedOutput) and passedOutput['trustedInput']:
@@ -269,8 +269,6 @@ class navhip:
 			if currentIndex != inputIndex:
 				script = bytearray()
 			writeVarint(len(script), params)
-			if len(script) == 0:
-				params.extend(sequence)
 			apdu.append(len(params))
 			apdu.extend(params)
 			self.dongle.exchange(bytearray(apdu))
@@ -288,6 +286,10 @@ class navhip:
 				apdu.extend(params)
 				self.dongle.exchange(bytearray(apdu))
 				offset += blockLength
+			if len(script) == 0:
+				apdu = [ self.BTCHIP_CLA, self.BTCHIP_INS_HASH_INPUT_START, 0x80, 0x00, len(sequence) ]
+				apdu.extend(sequence)
+				self.dongle.exchange(bytearray(apdu))				
 			currentIndex += 1
 
 	def finalizeInput(self, outputAddress, amount, fees, changePath, rawTx=None):
@@ -323,7 +325,7 @@ class navhip:
 					response = self.dongle.exchange(bytearray(apdu))
 					offset += dataLength
 				alternateEncoding = True
-			except BTChipException as e:
+			except Exception:
 				pass
 		if not alternateEncoding:
 			apdu = [ self.BTCHIP_CLA, self.BTCHIP_INS_HASH_INPUT_FINALIZE, 0x02, 0x00 ]

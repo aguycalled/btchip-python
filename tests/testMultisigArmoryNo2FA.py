@@ -136,7 +136,7 @@ dongle = getDongle(True)
 app = navhip(dongle)
 try:
   app.setup(navhip.OPERATION_MODE_RELAXED_WALLET, navhip.FEATURE_RFC6979|navhip.FEATURE_NO_2FA_P2SH, 111, 196, "1234", None, navhip.QWERTY_KEYMAP, SEED)
-except:
+except Exception:
   pass
 # Authenticate
 app.verifyPin("1234")
